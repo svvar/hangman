@@ -1,0 +1,131 @@
+Висельница.
+
+Вывод :
+
+ _______ 
+  |     |
+  |    (_)
+  |   /|_|\
+  |    / \
+  |
+ _|__________
+
+
+1st mistake :
+ 
+  |
+  |
+  |
+  |
+  |
+ _|__________
+
+2nd mistake :
+ _______
+  |     |
+  |
+  |
+  |
+  |
+ _|__________
+
+ 3rd mistake :
+ _______
+  |     |
+  |    (_)
+  |
+  |
+  |
+ _|__________
+
+
+4th mistake :
+ _______
+  |     |
+  |    (_)
+  |    |_|
+  |
+  |
+ _|__________
+
+5th mistake :
+ _______
+  |     |
+  |    (_)
+  |   /|_|
+  |
+  |
+ _|__________
+
+6th mistake :
+ _______
+  |     |
+  |    (_)
+  |   /|_|\
+  |
+  |
+ _|__________
+
+7th mistake :
+ _______
+  |     |
+  |    (_)
+  |   /|_|\
+  |    /
+  |
+ _|__________
+
+8th mistake :
+ _______
+  |     |
+  |    (_)
+  |   /|_|\
+  |    / \
+  | GAME OVER
+ _|__________
+
+
+Классы :
+
+class keyword {
+    private :
+        char *word; //dynamic memory
+    public :
+        //overloaded constructor :
+        keyword() { /...; } //computer pick the word
+        keyword(char *user_word) { strcpy(word, user_word); } //user pick the word
+        inline void get_word() { return word; }
+};
+
+//computer could pick one word from a map (randomly) :
+#include <map>
+map <int, string> dictionary = {{1, "Word_1"}, //use structure : map <key_type, value_type> name
+                          {2, "Word_2"},
+                          {3, "Word_3"},
+                              /...,
+                          {n, "Word_n"}};
+char *word = dictionary[x]; // x - random number - key
+//скорее всего словарь будет достаточно большим (или мы не поленимся сделать парсер), поэтому
+//предлагаю сделать его отдельным файлом. (dictionary.cpp and dictionary.h : #include "dictionary.h")
+
+class manikin {
+    private : //SIZE = 85
+        char phase1[SIZE] = "\n  |\n  |\n  |\n  |\n  |\n _|__________";
+        char phase2[SIZE] = "\n _______\n  |     |\n  |\n  |\n  |\n  |\n _|__________";
+        char phase3[SIZE] = "\n _______\n  |     |\n  |    (_)\n  |\n  |\n  |\n _|__________";
+        char phase4[SIZE] = "\n _______\n  |     |\n  |    (_)\n  |    |_|\n  |\n  |\n _|__________";
+        char phase5[SIZE] = "\n _______\n  |     |\n  |    (_)\n  |   /|_|\n  |\n  |\n _|__________";
+        char phase6[SIZE] = "\n _______\n  |     |\n  |    (_)\n  |   /|_|\ \n  |\n  |\n _|__________";
+        char phase7[SIZE] = "\n _______\n  |     |\n  |    (_)\n  |   /|_|\ \n  |    /\n  |\n _|__________";
+        char phase8[SIZE] = "\n _______\n  |     |\n  |    (_)\n  |   /|_|\ \n  |    / \ \n  | GAME OVER\n _|__________"; //max - 83 symbols
+
+    public :
+        inline void print_phase1() { cout << phase1; }
+        inline void print_phase2() { cout << phase2; }
+        inline void print_phase3() { cout << phase3; }
+        inline void print_phase4() { cout << phase4; }
+        inline void print_phase5() { cout << phase5; }
+        inline void print_phase6() { cout << phase6; }
+        inline void print_phase7() { cout << phase7; }
+        inline void print_phase8() { cout << phase8; }
+}
