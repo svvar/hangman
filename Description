@@ -98,11 +98,11 @@ class keyword {
         inline void get_word() { return word; }
 };
 
-enum Words { //computer could pick one of enum words
-    word_1 //value : 0
-    word_2 //value : 1
-    word_3 //value : 2
-    word_4 //value : 3
-    /...
-    word_n //value : n-1
-};
+//computer could pick one word from a map (randomly) :
+#include <map>
+map <int, string> dictionary = {{1, "Word_1"}, //use structure : map <key_type, value_type> name
+                          {2, "Word_2"},
+                          {3, "Word_3"},
+                              /...,
+                          {n, "Word_n"}};
+char *word = dictionary[x]; // x - random number - key
