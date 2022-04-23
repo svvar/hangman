@@ -87,3 +87,22 @@
 
 
 Классы :
+
+class keyword {
+    private :
+        char *word; //dynamic memory
+    public :
+        //overloaded constructor :
+        keyword() { /...; } //computer pick the word
+        keyword(char *user_word) { strcpy(word, user_word); } //user pick the word
+        inline void get_word() { return word; }
+};
+
+enum Words { //computer could pick one of enum words
+    word_1 //value : 0
+    word_2 //value : 1
+    word_3 //value : 2
+    word_4 //value : 3
+    /...
+    word_n //value : n-1
+};
