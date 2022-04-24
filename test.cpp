@@ -1,7 +1,9 @@
 /*main file*/
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <fstream>
+#include <vector>
 #define PHASES 8
 using namespace std;
 
@@ -11,9 +13,11 @@ string randomSelector(string fileName);
 //Hangman output (temporary)
 class manikin {
 private:
-    int phase = 1;
+    int phase = 0;
     int currentPlayer = 1;
+    string usedSymbols;
     string word;
+    string currentAppearance;
     string man[PHASES] = { "\n  |\n  |\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |\n  |\n  |\n  |\n _|__________",
     "\n _______\n  |     |\n  |    (_)\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |    |_|\n  |\n  |\n _|__________",
     "\n _______\n  |     |\n  |    (_)\n  |   /|_|\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |\n  |\n _|__________",
@@ -29,25 +33,61 @@ public:
         else {
             cout << "Відгадує гравець " << ((currentPlayer == 1) ? 2 : 1) << ". Гравець " << currentPlayer << " відгадує\n";
             cout << "Введіть слово: ";
-            cin >> word;
+            cin >> word;            
             currentPlayer == 1 ? currentPlayer = 2 : currentPlayer = 1;
         }
+
+        for(int i = 0 ; i < word.size()-1; i++)
+            currentAppearance.push_back('_');
+        currentAppearance.push_back('\0');
     }
-    inline void print_phase(int i) { cout << man[i - 1]; }
+    inline void print_phase(int i) { cout << man[i]; }
     string getWord() { return word; }
     int getPhase() { return phase; }
     void updatePhase() { phase++; }
+    int step() {
+        char ch;
+        cout << "\n" << currentAppearance << endl;
+        cout << "Вгадайте букву: ";
+        cin >> ch;
+        
+        if(usedSymbols.find(ch) == string::npos && word.find(ch) == string::npos){phase++;}
+
+        if(word.find(ch) != string::npos){
+            int indices[25];
+            cout << "Вгадав!!" << endl;
+            for(int i = 0; i < word.size(); i++)
+                if(word[i] == ch)
+                    currentAppearance[i] = ch;
+
+        }
+        //else{cout << "Цей символ ви вже вгадували!" << endl;}
+
+
+        if (usedSymbols.find(ch) == string::npos) {usedSymbols.push_back(ch); usedSymbols.push_back(' ');}
+        else {cout << "Цей символ ви вже вгадували!" << endl;}
+        
+        //TODO (НЕ ПРАЦЮЄ)*****************************
+        // if((word == currentAppearance) == 0){
+        //     cout << "WIN" << endl;
+        //     return 1;
+        // }
+        //**********************************************
+        cout << "Використані симовли: " << usedSymbols << endl;
+        return 0;
+    }
 
 };
 
 
 int main() {
+    setlocale(LC_CTYPE, "ukr");
     char answer;
     int score1, score2;
     do {
         int mode;
         do {
-            cout << "Виберіть режим гри: 1 - з комп'ютером, 2 - для двох";
+            cout << "Виберіть режим гри: 1 - з комп'ютером, 2 - для двох ";
             cin >> mode;
             if (mode != 1 && mode != 2)
                 cout << "Неправильний вибір, повторіть!" << endl;
@@ -63,10 +103,13 @@ int main() {
 
         cout << game->getWord() << endl;
 
-    
-        while (game->getPhase() < 9) {
-            game->print_phase(game->getPhase());
-            game->updatePhase();
+        int p = game->getPhase();
+        while (p < 8) {
+            game->print_phase(p);
+           // if(p < 8)
+                game->step();
+            p = game->getPhase();
+            //game->updatePhase();
         }
 
        
