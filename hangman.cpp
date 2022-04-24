@@ -52,5 +52,6 @@ string randomSelector(string fileName) {
         if(ch == ' ')
             spaces++;   
     }
+    file.close();
     return (word);
 }
