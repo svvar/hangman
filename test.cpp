@@ -47,9 +47,9 @@ public:
     currentAppearance.push_back('\0');
   }
   inline void print_phase(int i) { cout << man[i]; }
-  string getWord() { return word; }
-  int getPhase() { return phase; }
-  bool isend() { return end; }
+  inline string getWord() { return word; }
+  inline int getPhase() { return phase; }
+  inline bool isend() { return end; }
   void setWord(string word) {
     cout << "Введіть слово: ";
     cin >> word;
@@ -130,7 +130,7 @@ int main() {
         cout << "\nБуло зроблено " << counter[0] - 1 << " ходів.";
         cout << "\nБуло витрачено " << time << " сек.";
         cout << "\nВаш рахунок: " << score[0] << endl << endl;
-        cout << "\nЩе одне слово? (y/т) - так ";
+        cout << "\nЩе одне слово? (y/т) - ";
         cin >> reply;
       } while (reply == 'y' || reply == 'Y' || reply == 'т' || reply == 'Т');
       score[0] = 0;
@@ -168,7 +168,7 @@ int main() {
           fseek(stdin, 0, SEEK_END);
         } while (score[0] != maxScore && score[1] != maxScore);
 
-        cout << "\nЩе одна гра? (y/т) - так ";
+        cout << "\nЩе одна гра? (y/т) - ";
         cin >> reply;
         fseek(stdin, 0, SEEK_END);
 
@@ -177,7 +177,7 @@ int main() {
     }
 
 
-    cout << "\n\nЗіграти нову гру? (y/т) - так  ";
+    cout << "\n\nЗіграти нову гру? (y/т) - ";
     fseek(stdin, 0, SEEK_END);
     cin >> answer;
     fseek(stdin, 0, SEEK_END);
