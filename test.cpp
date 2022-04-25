@@ -90,6 +90,7 @@ int main() {
     char answer;
     int score1, score2;
     do {
+		bool end = false;
         int mode;
         do {
             cout << "Виберіть режим гри: 1 - з комп'ютером, 2 - для двох ";
