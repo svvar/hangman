@@ -18,11 +18,11 @@ void play(manikin* player1, int& score1, int& counter);
 //Hangman output (temporary)
 class manikin {
 private:
-  int phase = 0;
-  bool end = false;
-  string usedSymbols;
-  string word;
-  string currentAppearance;
+  int phase = 0; //phase counter
+  bool end = false; //end of ?
+  string usedSymbols; //used symbols per 1 match
+  string word; //keyword
+  string currentAppearance; //word entered by user
   string man[PHASES] = { "", "\n  |\n  |\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |\n  |\n  |\n  |\n _|__________",
   "\n _______\n  |     |\n  |    (_)\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |    |_|\n  |\n  |\n _|__________",
   "\n _______\n  |     |\n  |    (_)\n  |   /|_|\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |\n  |\n _|__________",
@@ -30,38 +30,38 @@ private:
   "\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |    / \\ \n  | GAME OVER\n _|__________" };
 
 public:
-  manikin() {
+  manikin() { //constructor : create game for 2 persons
     cout << "Введіть слово: ";
     cin >> word;
     cout << "\x1b[1A" // Move cursor up one
       << "\x1b[2K"; // Delete the entire line
-    for (int i = 0; i < word.size(); i++)
-      currentAppearance.push_back('_');
+    for (int i = 0; i < word.size(); i++) {
+      currentAppearance.push_back('_'); }
     currentAppearance.push_back('\0');
   }
-  manikin(int mode) {
+  manikin(int mode) { //constructor : create game for 1 person
     word = randomSelector("dict.txt");
 
-    for (int i = 0; i < word.size(); i++)
-      currentAppearance.push_back('_');
+    for (int i = 0; i < word.size(); i++) {
+      currentAppearance.push_back('_'); }
     currentAppearance.push_back('\0');
   }
-  inline void print_phase(int i) { cout << man[i]; }
-  inline string getWord() { return word; }
-  inline int getPhase() { return phase; }
-  inline bool isend() { return end; }
-  void setWord(string word) {
+  inline void print_phase(int i) { cout << man[i]; } //print curent phase of hangman
+  inline string getWord() { return word; } //(where used?)
+  inline int getPhase() { return phase; } //return curent phase
+  inline bool isend() { return end; } //return game status (end or not)
+  void setWord(string word) { //(continue to play, user enter the word again?)
     cout << "Введіть слово: ";
     cin >> word;
-    for (int i = 0; i < word.size(); i++)
-      currentAppearance.push_back('_');
+    for (int i = 0; i < word.size(); i++) {
+      currentAppearance.push_back('_'); }
     currentAppearance.push_back('\0');
   }
-  int step() {
+  int step() { //(?)
     char ch;
-    if (phase == 8) {
-      phase++;
-      end = true;
+    if (phase == PHASES-1) { //if user on 8th phase,
+      phase++;               //go to last phase 
+      end = true;            //and end the game
       return 0;
     }
     if (end == false) {
