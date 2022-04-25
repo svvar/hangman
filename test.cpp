@@ -38,7 +38,7 @@ public:
             currentPlayer == 1 ? currentPlayer = 2 : currentPlayer = 1;
         }
 
-        for(int i = 0 ; i < word.size()-1; i++)
+        for(int i = 0 ; i < word.size(); i++)
             currentAppearance.push_back('_');
         currentAppearance.push_back('\0');
     }
@@ -46,37 +46,37 @@ public:
     string getWord() { return word; }
     int getPhase() { return phase; }
     void updatePhase() { phase++; }
-    int step() {
+    int step(bool& end) {
         char ch;
-        cout << "\n" << currentAppearance << endl;
-        cout << "Вгадайте букву: ";
-        cin >> ch;
+		if (end == false){
+        	cout << "\n" << currentAppearance << endl;
+        	cout << "Вгадайте букву: ";
+        	cin >> ch;
         
-        if(usedSymbols.find(ch) == string::npos && word.find(ch) == string::npos){phase++;}
+        	if(usedSymbols.find(ch) == string::npos && word.find(ch) == string::npos){phase++;}
 
-        if(word.find(ch) != string::npos){
-            int indices[25];
-            cout << "Вгадав!!" << endl;
-            for(int i = 0; i < word.size(); i++)
-                if(word[i] == ch)
-                    currentAppearance[i] = ch;
+        	if(word.find(ch) != string::npos){
+            	int indices[25];
+            	cout << "Вгадав!!" << endl;
+            	for(int i = 0; i < word.size(); i++)
+                	if(word[i] == ch)
+                    	currentAppearance[i] = ch;
 
-        }
-        //else{cout << "Цей символ ви вже вгадували!" << endl;}
+        	}
+        	//else{cout << "Цей символ ви вже вгадували!" << endl;}
 
 
-        if (usedSymbols.find(ch) == string::npos) {usedSymbols.push_back(ch); usedSymbols.push_back(' ');}
-        else {cout << "Цей символ ви вже вгадували!" << endl;}
-
+        	if (usedSymbols.find(ch) == string::npos) {usedSymbols.push_back(ch); usedSymbols.push_back(' ');}
+        	else {cout << "Цей символ ви вже вгадували!" << endl;}
+		}
         //cout << word.size() << "      " << currentAppearance.size() << "     " << strCompare(word, currentAppearance) << endl;
         
-        //cout << (word == currentAppearance) << endl;
-        //TODO (НЕ ПРАЦЮЄ)*****************************
-        if(strCompare(word, currentAppearance)){
+		if(strCompare(word, currentAppearance)){
+			end = true;
             cout << "WIN" << endl;
             return 1;
         }
-        //**********************************************
+
         cout << "Використані симовли: " << usedSymbols << endl;
         return 0;
     }
@@ -86,6 +86,7 @@ public:
 
 int main() {
     setlocale(LC_CTYPE, "ukr");
+	bool end = false;
     char answer;
     int score1, score2;
     do {
@@ -109,34 +110,26 @@ int main() {
 
         int p = game->getPhase();
         while (p < PHASES) {
-            game->print_phase(p);
-            //if(p < 8)
-                game->step();
-            p = game->getPhase();
-            //game->updatePhase();
+            if (end == false) {
+        		game->print_phase(p);
+        		game->step(end);
+        		p = game->getPhase();
+      		}
+      		else
+        		break;
         }
-
-       
-
-        //man.print_phase(1);
-       // man.print_phase(3);
-       // man.print_phase(8);
-
-
-        //просто тест (вибір випадкового слова і його друк)
-        //string word = randomSelector("dict.txt");
-        //cout << word;
 
         cout << "\n\nЗіграти ще раз? (y/т) - так  ";
         fseek(stdin, 0, SEEK_END);
         cin >> answer;
+		fseek(stdin, 0, SEEK_END);
 
     } while (answer == 'y' || answer == 'Y' || answer == 'т' || answer == 'Т');
 }
 
 int strCompare(string word, string current){
     int size = word.size();
-    for(int i = 0; i < size-1; i++){
+    for(int i = 0; i < size; i++){
         if(word[i] != current[i])
             return 0;
     }
@@ -169,6 +162,8 @@ string randomSelector(string fileName) {
     int spaces = 0;
     for (char ch : dict) {
         if (spaces == randomNumber) {
+			if (ch == ' ')
+                break;
             word += ch;
         }
         if (ch == ' ')
