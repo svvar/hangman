@@ -11,15 +11,13 @@ using namespace std;
 class manikin;
 string randomSelector(string fileName);
 int strCompare(string word, string current);
-void gameMode(int mode, manikin *player1, manikin *player2);
-void play1(manikin* player1, int& score1);
-void play2(manikin* player1, manikin* player2, int& score1, int& score2);
+void play(manikin* player1, int& score1);
+
 
 //Hangman output (temporary)
 class manikin {
 private:
     int phase = 0;
-    //int score = 0;
     bool end = false;
     string usedSymbols;
     string word;
@@ -34,8 +32,7 @@ public:
     manikin() {
         cout << "Введіть слово: ";
         cin >> word;
-		cout
-            << "\x1b[1A" // Move cursor up one
+		cout<< "\x1b[1A" // Move cursor up one
             << "\x1b[2K"; // Delete the entire line
         for (int i = 0; i < word.size(); i++)
             currentAppearance.push_back('_');
@@ -51,7 +48,6 @@ public:
     inline void print_phase(int i) { cout << man[i]; }
     string getWord() { return word; }
     int getPhase() { return phase; }
-    //int getScore() { return score; }
     bool isend() { return end; }
     void setWord(string word) {
         cout << "Введіть слово: ";
@@ -92,7 +88,6 @@ public:
 
         if (strCompare(word, currentAppearance)) {
             end = true;
-            //score++;
             cout << "СЛОВО ВІДГАДАНЕ!" << endl;
             return 1;
         }
@@ -107,11 +102,9 @@ public:
 
 int main() {
     setlocale(LC_CTYPE, "ukr");
-    //bool end = false;
     char answer;
     int score[2] = {0, 0};
     do {
-        //bool end = false;
         int mode;
         do {
             cout << "Виберіть режим гри: 1 - з комп'ютером, 2 - для двох ";
@@ -126,7 +119,7 @@ int main() {
             do {
                 reply = ' ';
                 manikin *player1 = new manikin(1);
-                play1(player1, score[0]);
+                play(player1, score[0]);
                 cout << "\nВаш рахунок: " << score[0] << endl << endl;
                 cout << "\nЩе одне слово? (y/т) - так ";
                 cin >> reply;
@@ -145,7 +138,7 @@ int main() {
                     cout << "Відгадує гравець " << currentPlayer << ". Гравець " << ((currentPlayer == 1) ? 2 : 1) << " загадує\n";
                     scoreBefore = score[currentPlayer - 1];
                     manikin* player = new manikin();
-                    play1(player, score[currentPlayer - 1]);
+                    play(player, score[currentPlayer - 1]);
                     cout << "\nГравець "<<currentPlayer<<" ваш рахунок: " << score[currentPlayer-1] << endl << endl;
 
 
@@ -186,7 +179,7 @@ int strCompare(string word, string current) {
     return 1;
 }
 
-void play1(manikin* player1, int& score1) {    
+void play(manikin* player1, int& score1) {    
     int p = player1->getPhase();
         
     while (p < PHASES) {
