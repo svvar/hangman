@@ -9,6 +9,7 @@ using namespace std;
 
 //functions
 string randomSelector(string fileName);
+int strCompare(string word, string current);
 
 //Hangman output (temporary)
 class manikin {
@@ -31,7 +32,7 @@ public:
             word = randomSelector("dict.txt");
         }
         else {
-            cout << "Відгадує гравець " << ((currentPlayer == 1) ? 2 : 1) << ". Гравець " << currentPlayer << " відгадує\n";
+            cout << "Відгадує гравець " << ((currentPlayer == 1) ? 2 : 1) << ". Гравець " << currentPlayer << " загадує\n";
             cout << "Введіть слово: ";
             cin >> word;            
             currentPlayer == 1 ? currentPlayer = 2 : currentPlayer = 1;
@@ -66,12 +67,15 @@ public:
 
         if (usedSymbols.find(ch) == string::npos) {usedSymbols.push_back(ch); usedSymbols.push_back(' ');}
         else {cout << "Цей символ ви вже вгадували!" << endl;}
+
+        //cout << word.size() << "      " << currentAppearance.size() << "     " << strCompare(word, currentAppearance) << endl;
         
+        //cout << (word == currentAppearance) << endl;
         //TODO (НЕ ПРАЦЮЄ)*****************************
-        // if((word == currentAppearance) == 0){
-        //     cout << "WIN" << endl;
-        //     return 1;
-        // }
+        if(strCompare(word, currentAppearance)){
+            cout << "WIN" << endl;
+            return 1;
+        }
         //**********************************************
         cout << "Використані симовли: " << usedSymbols << endl;
         return 0;
@@ -104,9 +108,9 @@ int main() {
         cout << game->getWord() << endl;
 
         int p = game->getPhase();
-        while (p < 8) {
+        while (p < PHASES) {
             game->print_phase(p);
-           // if(p < 8)
+            //if(p < 8)
                 game->step();
             p = game->getPhase();
             //game->updatePhase();
@@ -130,6 +134,14 @@ int main() {
     } while (answer == 'y' || answer == 'Y' || answer == 'т' || answer == 'Т');
 }
 
+int strCompare(string word, string current){
+    int size = word.size();
+    for(int i = 0; i < size-1; i++){
+        if(word[i] != current[i])
+            return 0;
+    }
+    return 1;
+}
 
 string randomSelector(string fileName) {
     //слова в словнику повинні бути записані через пробіл, після останнього слова теж пробіл
