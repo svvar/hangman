@@ -2,10 +2,9 @@
 #include <iostream>
 #include <string> // functions used : string.find(), string.push_back() string::npos, string.size()
 #include <cctype> // function used : toupper()
-//#include <cstring> // functions used : ??
-#include <fstream> // functions used : file.open(), file.close()
+#include <fstream> // functions used : file.open(), file.close(), getline()
 #include <ctime> // functions used : clock(), clock_t, CLOCKS_PER_SEC
-#include <cstdlib>
+#include <cstdlib> // functions used : srand(), rand(), exit()
 #define PHASES 9 // phases of hangman (first phase + 8 mistakes)
 using namespace std;
 
