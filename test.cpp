@@ -1,9 +1,9 @@
 /*main file*/
 #include <iostream>
 #include <string> // functions used : string.find(), string.push_back() string::npos, string.size()
-#include <cstring> // functions used : ??
+#include <cctype> // function used : toupper()
+//#include <cstring> // functions used : ??
 #include <fstream> // functions used : file.open(), file.close()
-#include <vector> // functions used : ??
 #include <ctime> // functions used : clock(), clock_t, CLOCKS_PER_SEC
 #include <cstdlib>
 #define PHASES 9 // phases of hangman (first phase + 8 mistakes)
@@ -70,11 +70,14 @@ public:
 			if (usedSymbols.find(ch) == string::npos && word.find(ch) == string::npos) { phase++; }
 
 			// if letter is in the keyword
-			if (word.find(ch) != string::npos) {
+			if (word.find(ch) != string::npos || word.find(toupper(ch)) != string::npos) {
 				cout << "Буква знайдена!!" << endl;
 				for (int i = 0; i < (int)word.size(); i++)
-					if (word[i] == ch) // then add it on its position to input
-						currentAppearance[i] = ch;
+					if (word[i] == ch) { // then add it on its position to input
+						currentAppearance[i] = ch; }
+					else if (word[i] == toupper(ch)) { // uppercase char
+						currentAppearance[i] = toupper(ch);
+					}
 			}
 
 			if (usedSymbols.find(ch) == string::npos) { // if letter was not in the used symbols
@@ -86,7 +89,7 @@ public:
 
 		if (strCompare(word, currentAppearance)) { // comparing input and keyword, if true
 			end = true; // then end the game, user win
-			cout << "СЛОВО ВІДГАДАНЕ!" << endl;
+			cout << "СЛОВО ВІДГАДАНЕ! - " << currentAppearance  << endl;
 			return 1;
 		}
 
