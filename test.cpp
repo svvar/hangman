@@ -12,7 +12,7 @@ class manikin; // the main class
 // functions :
 string randomSelector(string fileName); // function that return random keyword from dictionary file
 int strCompare(string word, string current);  // function that compare two strings
-void play(manikin *player1, int &score1, int &counter); // game function
+void play(manikin* player1, int& score1, int& counter); // game function
 
 // Hangman output (temporary)
 class manikin {
@@ -22,18 +22,18 @@ private:
 	string usedSymbols;		  // used symbols per 1 match
 	string word;			  // keyword
 	string currentAppearance; // word entered by user
-	string man[PHASES] = {"", "\n  |\n  |\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |\n  |\n  |\n  |\n _|__________",
-						  "\n _______\n  |     |\n  |    (_)\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |    |_|\n  |\n  |\n _|__________",
-						  "\n _______\n  |     |\n  |    (_)\n  |   /|_|\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |\n  |\n _|__________",
-						  "\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |    /\n  |\n _|__________",
-						  "\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |    / \\ \n  | GAME OVER\n _|__________"};
+	string man[PHASES] = { "", "\n  |\n  |\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |\n  |\n  |\n  |\n _|__________",
+							"\n _______\n  |     |\n  |    (_)\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |    |_|\n  |\n  |\n _|__________",
+							"\n _______\n  |     |\n  |    (_)\n  |   /|_|\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |\n  |\n _|__________",
+							"\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |    /\n  |\n _|__________",
+							"\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |    / \\ \n  | GAME OVER\n _|__________" };
 
 public:
 	manikin() { // constructor : create game for 2 persons
 		cout << "Введіть слово: ";
 		cin >> word;
 		cout << "\x1b[1A"  // Move cursor up one
-			 << "\x1b[2K"; // Delete the entire line
+			<< "\x1b[2K"; // Delete the entire line
 		for (int i = 0; i < (int)word.size(); i++)
 		{
 			currentAppearance.push_back('_');
@@ -44,7 +44,8 @@ public:
 		word = randomSelector("dict.txt");
 
 		for (int i = 0; i < (int)word.size(); i++) {
-			currentAppearance.push_back('_'); }
+			currentAppearance.push_back('_');
+		}
 		currentAppearance.push_back('\0');
 	}
 	inline void print_phase(int i) { cout << man[i]; } // print curent phase of hangman
@@ -61,7 +62,7 @@ public:
 		}
 		if (end == false) { // if game continue
 			cout << "\n"
-				 << currentAppearance << endl; // print current input
+				<< currentAppearance << endl; // print current input
 			cout << "\nВгадайте букву: ";
 			cin >> ch; // get new letter
 
@@ -73,7 +74,8 @@ public:
 				cout << "Буква знайдена!!" << endl;
 				for (int i = 0; i < (int)word.size(); i++)
 					if (word[i] == ch) { // then add it on its position to input
-						currentAppearance[i] = ch; }
+						currentAppearance[i] = ch;
+					}
 					else if (word[i] == toupper(ch)) { // uppercase char
 						currentAppearance[i] = toupper(ch);
 					}
@@ -88,7 +90,7 @@ public:
 
 		if (strCompare(word, currentAppearance)) { // comparing input and keyword, if true
 			end = true; // then end the game, user win
-			cout << "СЛОВО ВІДГАДАНЕ! - " << currentAppearance  << endl;
+			cout << "СЛОВО ВІДГАДАНЕ! - " << currentAppearance << endl;
 			return 1;
 		}
 
@@ -102,10 +104,9 @@ int main() {
 	system("chcp 1251");
 	setlocale(LC_ALL, "UTF8");
 	string answer; // user answer for continue the game
-	int score[2] = {0, 0}; // score points for both playes
+	int score[2] = { 0, 0 }; // score points for both playes
 	int counter[2]; // steps counter for both players per 1 match
-	clock_t t;
-	int time;
+	unsigned int start, end, time;
 	do {
 		answer = ' ';
 		int mode;
@@ -121,14 +122,15 @@ int main() {
 			do {
 				counter[0] = 0; // 0 steps in the beginning
 				reply = ' ';
-				manikin *player1 = new manikin(1); // create a keyword and output for 1 user
-				t = clock(); // get the current time
+				manikin* player1 = new manikin(1); // create a keyword and output for 1 user
+				start = clock(); // get the current time
 				play(player1, score[0], counter[0]); // game function
-				time = (clock() - t) / CLOCKS_PER_SEC; // count game duration in seconds
-				cout << "\nБуло зроблено " << counter[0] - 1 << " ходів.";
-				cout << "\nБуло витрачено " << time << " сек.";
+				end = clock();
+				time = end - start; // count game duration in seconds
+				cout << "\nКількість ходів: " << counter[0] - 1;
+				cout << "\nВитрачений час (в секундах): " << time / 1000;
 				cout << "\nВаш рахунок: " << score[0] << endl
-					 << endl;
+					<< endl;
 				cout << "\nЩе одне слово? (y/т) - ";
 				cin >> reply;
 			} while (reply == "y" || reply == "Y" || reply == "т" || reply == "Т");
@@ -147,18 +149,20 @@ int main() {
 					counter[1] = 0; // reset
 					cout << "Відгадує гравець " << currentPlayer << ". Гравець " << ((currentPlayer == 1) ? 2 : 1) << " загадує\n";
 					scoreBefore = score[currentPlayer - 1];
-					manikin *player = new manikin(); // create a manikin for two players, get keyword from user
-					t = clock(); // get the current time
+					manikin* player = new manikin(); // create a manikin for two players, get keyword from user
+					start = clock(); // get the current time
 					play(player, score[currentPlayer - 1], counter[currentPlayer - 1]); // game function
-					time = (clock() - t) / CLOCKS_PER_SEC;
+					end = clock();
+					time = end - start; // count game duration in seconds
 					cout << "\nБуло зроблено " << counter[currentPlayer - 1] - 1 << " ходів.";
-					cout << "\nБуло витрачено " << time << " сек.";
+					cout << "\nБуло витрачено " << time / 1000 << " сек.";
 					cout << "\nГравець " << currentPlayer << " ваш рахунок: " << score[currentPlayer - 1] << endl
-						 << endl;
+						<< endl;
 
 					if (score[currentPlayer - 1] == scoreBefore) { // if current player loses,
-						currentPlayer == 1 ? currentPlayer = 2 : currentPlayer = 1; } // then it's next player's turn
-					// winning condition - player get max score
+						currentPlayer == 1 ? currentPlayer = 2 : currentPlayer = 1;
+					} // then it's next player's turn
+// winning condition - player get max score
 					if (score[0] == maxScore) { cout << "Гравець 1 переміг!!!!\n\n"; }
 					else if (score[1] == maxScore) { cout << "Гравець 2 переміг!!!!\n\n"; }
 					fseek(stdin, 0, SEEK_END); // clean the buffer
@@ -185,12 +189,13 @@ int strCompare(string word, string current) { // function that compare two strin
 	int size = word.size(); // get the keyword's size
 	for (int i = 0; i < size; i++) { // for each char until the last one compare keyword and user's input
 		if (word[i] != current[i]) { // if they aren't the same return 0
-			return 0; }
+			return 0;
+		}
 	}
 	return 1; // otherwise keyword and user's input are the same so return 1
 }
 
-void play(manikin *player1, int &score1, int &counter) { // game function
+void play(manikin* player1, int& score1, int& counter) { // game function
 	int p = player1->getPhase(); // get current hangman's phase
 
 	while (p < PHASES) { // while current phase < max amount of phases
@@ -218,7 +223,7 @@ string randomSelector(string fileName) { // function that return random keyword 
 		cout << "В словнику відсутні слова! Помилка!";
 		exit(1);
 	}
-	
+
 	// loop that count words in the dictionary
 	int wordsCount = 0;
 	for (char buf : dict) { // foreach
