@@ -3,8 +3,9 @@
 #include <string> // functions used : string.find(), string.push_back() string::npos, string.size()
 #include <cctype> // function used : toupper()
 #include <fstream> // functions used : file.open(), file.close(), getline()
-#include <ctime> // functions used : clock(), clock_t, CLOCKS_PER_SEC
+//#include <ctime> // functions used : clock(), clock_t, CLOCKS_PER_SEC
 #include <cstdlib> // functions used : srand(), rand(), exit()
+#include <chrono>
 #define PHASES 9 // phases of hangman (first phase + 8 mistakes)
 using namespace std;
 
@@ -106,7 +107,7 @@ int main() {
 	string answer; // user answer for continue the game
 	int score[2] = { 0, 0 }; // score points for both playes
 	int counter[2]; // steps counter for both players per 1 match
-	unsigned int start, end, time;
+	//auto start, end, time;
 	do {
 		answer = ' ';
 		int mode;
@@ -123,12 +124,12 @@ int main() {
 				counter[0] = 0; // 0 steps in the beginning
 				reply = ' ';
 				manikin* player1 = new manikin(1); // create a keyword and output for 1 user
-				start = clock(); // get the current time
+				auto start1 = std::chrono::steady_clock::now(); // get the current time
 				play(player1, score[0], counter[0]); // game function
-				end = clock();
-				time = end - start; // count game duration in seconds
+				auto end1 = std::chrono::steady_clock::now();
+				auto time1 = std::chrono::duration_cast<std::chrono::seconds>(end1 - start1); // count game duration in seconds
 				cout << "\nКількість ходів: " << counter[0] - 1;
-				cout << "\nВитрачений час (в секундах): " << time / 1000;
+				cout << "\nВитрачений час (в секундах): " << time1.count();
 				cout << "\nВаш рахунок: " << score[0] << endl
 					<< endl;
 				cout << "\nЩе одне слово? (y/т) - ";
@@ -150,12 +151,12 @@ int main() {
 					cout << "Відгадує гравець " << currentPlayer << ". Гравець " << ((currentPlayer == 1) ? 2 : 1) << " загадує\n";
 					scoreBefore = score[currentPlayer - 1];
 					manikin* player = new manikin(); // create a manikin for two players, get keyword from user
-					start = clock(); // get the current time
+					auto start2 = std::chrono::steady_clock::now(); // get the current time
 					play(player, score[currentPlayer - 1], counter[currentPlayer - 1]); // game function
-					end = clock();
-					time = end - start; // count game duration in seconds
-					cout << "\nБуло зроблено " << counter[currentPlayer - 1] - 1 << " ходів.";
-					cout << "\nБуло витрачено " << time / 1000 << " сек.";
+					auto end2 = std::chrono::steady_clock::now();
+					auto time2 = std::chrono::duration_cast<std::chrono::seconds>(end2 - start2); // count game duration in seconds
+					cout << "\nКількість ходів: " << counter[currentPlayer - 1] - 1;
+					cout << "\nВитрачений час (в секундах): " << time2.count();
 					cout << "\nГравець " << currentPlayer << " ваш рахунок: " << score[currentPlayer - 1] << endl
 						<< endl;
 
