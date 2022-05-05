@@ -3,9 +3,8 @@
 #include <string> // functions used : string.find(), string.push_back() string::npos, string.size()
 #include <cctype> // function used : toupper()
 #include <fstream> // functions used : file.open(), file.close(), getline()
-//#include <ctime> // functions used : clock(), clock_t, CLOCKS_PER_SEC
 #include <cstdlib> // functions used : srand(), rand(), exit()
-#include <chrono>
+#include <chrono> // functions used : steady_clock::now(), duration_cast<seconds>
 #define PHASES 9 // phases of hangman (first phase + 8 mistakes)
 using namespace std;
 
@@ -16,19 +15,18 @@ string randomSelector(string fileName); // function that return random keyword f
 int strCompare(string word, string current);  // function that compare two strings
 void play(WordGuess* player1, int& score1, int& counter); // game function
 
-// Hangman output (temporary)
+// Hangman output
 class manikin {
-private:
 	string man[PHASES] = { "", "\n  |\n  |\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |\n  |\n  |\n  |\n _|__________",
 							"\n _______\n  |     |\n  |    (_)\n  |\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |    |_|\n  |\n  |\n _|__________",
 							"\n _______\n  |     |\n  |    (_)\n  |   /|_|\n  |\n  |\n _|__________", "\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |\n  |\n _|__________",
 							"\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |    /\n  |\n _|__________",
 							"\n _______\n  |     |\n  |    (_)\n  |   /|_|\\ \n  |    / \\ \n  | GAME OVER\n _|__________" };
-
 public:
 	inline void print_phase(int i) { cout << man[i]; } // print curent phase of hangman
 };
 
+// Main class
 class WordGuess {
 	string word;
 	string usedSymbols;
@@ -55,7 +53,7 @@ public:
 		}
 		currentAppearance.push_back('\0');
 	}
-	inline string getWord() { return word; }		   // (where used?)
+	inline string getWord() { return word; }		   // check word (admin function)
 	inline int getPhase() { return phase; }			   // return curent phase
 	inline bool isend() { return end; }				   // return game status (end or not)
 	int step() { // do one step in the match, return score
@@ -79,7 +77,7 @@ public:
 					cout << "\x1b[1A" << "\x1b[2K";  // Move cursor up one  Delete the entire line
 					cout << "Повинні бути лише англійські букви! Введіть ще раз: ";
 				}
-			} while (!isalpha(chIn[0]) || chIn.size() > 1);       //check input (only letters && only 1 char)
+			} while (!isalpha(chIn[0]) || chIn.size() > 1); //check input (only letters && only 1 char)
 
 			char ch = chIn[0];
 			ch = tolower(ch);
@@ -121,8 +119,8 @@ public:
 };
 
 int main() {
-	setlocale(LC_CTYPE, "ukr"); // (я у віжуалці робила, воно не читає ютф8) 
-	//setlocale(LC_ALL, "UTF8");
+	setlocale(LC_CTYPE, "ukr"); // Visual Studio (Настя, Даша)
+	//setlocale(LC_ALL, "UTF8"); // Visual Studio Code
 	string answer; // user answer for continue the game
 	int score[2] = { 0, 0 }; // score points for both playes
 	int counter[2]; // steps counter for both players per 1 match
@@ -159,7 +157,7 @@ int main() {
 		}
 		else { // mode : 2 players - users
 			int scoreBefore, maxScore;
-			string reply; // user reply for continue guess
+			string reply; // user's reply for continue guess
 			do {
 				int currentPlayer = 1;
 				reply = ' ';
@@ -183,7 +181,7 @@ int main() {
 					if (score[currentPlayer - 1] == scoreBefore) { // if current player loses,
 						currentPlayer == 1 ? currentPlayer = 2 : currentPlayer = 1;
 					} // then it's next player's turn
-// winning condition - player get max score
+					// winning condition - player get max score
 					if (score[0] == maxScore) { cout << "Гравець 1 переміг!!!!\n\n"; }
 					else if (score[1] == maxScore) { cout << "Гравець 2 переміг!!!!\n\n"; }
 					fseek(stdin, 0, SEEK_END); // clean the buffer
@@ -235,7 +233,6 @@ void play(WordGuess* player1, int& score1, int& counter) { // game function
 
 string randomSelector(string fileName) { // function that return random keyword from dictionary file
 	//слова в словнику повинні бути записані через пробіл, після останнього слова теж пробіл
-	//можна доробити, щоб приймалося розділення слів будь-якими isspace символами
 
 	fstream file;
 	string word;
