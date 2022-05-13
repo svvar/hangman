@@ -38,16 +38,15 @@ public:
 		cout << "\x1b[1A"  // Move cursor up one
 			<< "\x1b[2K"; // Delete the entire line
 		for (int i = 0; i < (int)word.size()/2; i++)
-			currentAppearance.push_back('_');
-		currentAppearance += "                         \0";
+			currentAppearance += "ˍ";
+		currentAppearance += "\0";
 	}
 	manikin(int mode) { // constructor : create game for 1 person
 		word = randomSelector("dict.txt");
-		cout << word << endl;
 
 		for (int i = 0; i < (int)word.size()/2; i++)
-			currentAppearance.push_back('_');
-		currentAppearance += "                         \0";
+			currentAppearance += "ˍ";
+		currentAppearance += "\0";
 	}
 	inline void print_phase(int i) { cout << man[i]; } // print curent phase of hangman
 	inline string getWord() { return word; }		   // (where used?)
@@ -64,7 +63,6 @@ public:
 		if (end == false) { // if game continue
 			cout << "\n" << currentAppearance << endl; // print current input
 			cout << "\nВгадайте букву: ";
-			//cout << "\x1b[1A" << "\x1b[2K";  // Move cursor up one  Delete the entire line
             int ind;
 			do{
 				ind = 0;
@@ -72,10 +70,7 @@ public:
                 ind = charValidation(ch);
             }while(!ind);       //check input (only letters && only 1 char)
 
-            //char ch = chIn[0];
-            //ch = tolower(ch);
-
-            //cout << "\033[2J\033[1;1H"; //special screen clean command
+            cout << "\033[2J\033[1;1H"; //special screen clean command
 
 			// if letter is not in the used symbols and not in the keyword then go to next phase
 			if (usedSymbols.find(ch) == string::npos && word.find(ch) == string::npos) { phase++; }
@@ -84,17 +79,12 @@ public:
 			if (word.find(ch) != string::npos /*|| word.find(toupper(ch)) != string::npos*/) {
 				cout << "Буква знайдена!!" << endl;
     			int nPos = word.find(ch, 0); // first occurrence
-    			while(nPos != string::npos){
-
-					currentAppearance.replace(nPos, 2, ch);
-					currentAppearance.insert(nPos+2 ,"_");					
+    			while(nPos != (int)string::npos){
+					currentAppearance.replace(nPos, 2, ch);					
 					nPos = word.find(ch, nPos + 1);
 									
     			}
-				
-
 			}
-			currentAppearance = currentAppearance.substr(0, word.size()-1);
 
 			if (usedSymbols.find(ch) == string::npos) { // if letter was not in the used symbols
 				usedSymbols.append(ch); // then add it
