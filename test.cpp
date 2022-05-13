@@ -11,9 +11,11 @@ using namespace std;
 
 class manikin; // the main class
 // functions :
+int charValidation(string chIn);
 string randomSelector(string fileName); // function that return random keyword from dictionary file
 int strCompare(string word, string current);  // function that compare two strings
 void play(manikin* player1, int& score1, int& counter); // game function
+
 
 // Hangman output (temporary)
 class manikin {
@@ -35,19 +37,17 @@ public:
 		cin >> word;
 		cout << "\x1b[1A"  // Move cursor up one
 			<< "\x1b[2K"; // Delete the entire line
-		for (int i = 0; i < (int)word.size(); i++)
-		{
+		for (int i = 0; i < (int)word.size()/2; i++)
 			currentAppearance.push_back('_');
-		}
-		currentAppearance.push_back('\0');
+		currentAppearance += "                         \0";
 	}
 	manikin(int mode) { // constructor : create game for 1 person
 		word = randomSelector("dict.txt");
+		cout << word << endl;
 
-		for (int i = 0; i < (int)word.size(); i++) {
+		for (int i = 0; i < (int)word.size()/2; i++)
 			currentAppearance.push_back('_');
-		}
-		currentAppearance.push_back('\0');
+		currentAppearance += "                         \0";
 	}
 	inline void print_phase(int i) { cout << man[i]; } // print curent phase of hangman
 	inline string getWord() { return word; }		   // (where used?)
@@ -55,35 +55,49 @@ public:
 	inline bool isend() { return end; }				   // return game status (end or not)
 
 	int step() { // do one step in the match, return score
-		char ch;
 		if (phase == PHASES - 1) { // if user on 8th phase,
 			phase++;			   // go to last phase
 			end = true; 		   // and end the game
 			return 0;
 		}
+        string ch;
 		if (end == false) { // if game continue
-			cout << "\n"
-				<< currentAppearance << endl; // print current input
+			cout << "\n" << currentAppearance << endl; // print current input
 			cout << "\nВгадайте букву: ";
-			cin >> ch; // get new letter
+			//cout << "\x1b[1A" << "\x1b[2K";  // Move cursor up one  Delete the entire line
+            int ind;
+			do{
+				ind = 0;
+                cin >> ch; // get new letter
+                ind = charValidation(ch);
+            }while(!ind);       //check input (only letters && only 1 char)
+
+            //char ch = chIn[0];
+            //ch = tolower(ch);
+
+            //cout << "\033[2J\033[1;1H"; //special screen clean command
 
 			// if letter is not in the used symbols and not in the keyword then go to next phase
 			if (usedSymbols.find(ch) == string::npos && word.find(ch) == string::npos) { phase++; }
 
 			// if letter is in the keyword
-			if (word.find(ch) != string::npos || word.find(toupper(ch)) != string::npos) {
+			if (word.find(ch) != string::npos /*|| word.find(toupper(ch)) != string::npos*/) {
 				cout << "Буква знайдена!!" << endl;
-				for (int i = 0; i < (int)word.size(); i++)
-					if (word[i] == ch) { // then add it on its position to input
-						currentAppearance[i] = ch;
-					}
-					else if (word[i] == toupper(ch)) { // uppercase char
-						currentAppearance[i] = toupper(ch);
-					}
+    			int nPos = word.find(ch, 0); // first occurrence
+    			while(nPos != string::npos){
+
+					currentAppearance.replace(nPos, 2, ch);
+					currentAppearance.insert(nPos+2 ,"_");					
+					nPos = word.find(ch, nPos + 1);
+									
+    			}
+				
+
 			}
+			currentAppearance = currentAppearance.substr(0, word.size()-1);
 
 			if (usedSymbols.find(ch) == string::npos) { // if letter was not in the used symbols
-				usedSymbols.push_back(ch); // then add it
+				usedSymbols.append(ch); // then add it
 				usedSymbols.push_back(' '); // and add a space
 			}
 			else { cout << "Цей символ ви вже вгадували!" << endl; } // otherwise print that letter was used
@@ -102,8 +116,7 @@ public:
 };
 
 int main() {
-	system("chcp 1251");
-	setlocale(LC_ALL, "UTF8");
+	setlocale(LC_ALL, "Ukrainian");
 	string answer; // user answer for continue the game
 	int score[2] = { 0, 0 }; // score points for both playes
 	int counter[2]; // steps counter for both players per 1 match
@@ -134,6 +147,7 @@ int main() {
 					<< endl;
 				cout << "\nЩе одне слово? (y/т) - ";
 				cin >> reply;
+                cout << "\033[2J\033[1;1H"; //special screen clean command
 			} while (reply == "y" || reply == "Y" || reply == "т" || reply == "Т");
 			score[0] = 0; // reset the score
 		}
@@ -171,6 +185,7 @@ int main() {
 
 				cout << "\nЩе одна гра? (y/т) - ";
 				cin >> reply;
+                cout << "\033[2J\033[1;1H"; //special screen clean command
 				fseek(stdin, 0, SEEK_END); // clean the buffer
 				// reset user's score
 				score[0] = 0;
@@ -181,15 +196,48 @@ int main() {
 		cout << "\n\nЗіграти нову гру? (y/т) - ";
 		fseek(stdin, 0, SEEK_END); // clean the buffer
 		cin >> answer;
+        cout << "\033[2J\033[1;1H"; //special screen clean command
 		fseek(stdin, 0, SEEK_END); // clean the buffer
 
 	} while (answer == "y" || answer == "Y" || answer == "т" || answer == "Т");
 }
 
+int charValidation(string chIn){
+	for(int i = 0; i < (int)chIn.size(); i++){
+		if(isalnum(chIn[i])){
+			cout << "Помилка, введіть ще раз: ";
+			return 0;
+		}
+	}
+
+	if(chIn.size() != 2){
+		cout << "Введіть лише 1 букву! Ще раз: ";
+		return 0;
+	}
+
+	string alphabet[] = {"А","Б","В","Г","Ґ","Д","Е","Є","З","Ж","И","І","Ї","Й","К","Л","М","Н","О","П","Р","С","Т","У","Ф","Х","Ц","Ч","Ш","Щ","Ь","Ю","Я",
+						"а","б","в","г","ґ","д","е","є","ж","з","и","і","ї","й","к","л","м","н","о","п","р","с","т","у","ф","х","ц","ч","ш","щ","ь","ю","я"};
+	for(int i = 0; i < 66; i++){
+		if(chIn == alphabet[i]){
+			return 1;
+		}
+
+	}
+
+	cout << "Помилка, введіть ща раз: ";	
+	return 0;
+}
+
 int strCompare(string word, string current) { // function that compare two strings
-	int size = word.size(); // get the keyword's size
-	for (int i = 0; i < size; i++) { // for each char until the last one compare keyword and user's input
-		if (word[i] != current[i]) { // if they aren't the same return 0
+	wstring wWord = wstring(word.begin(), word.end());
+	wstring wCurrent = wstring(current.begin(), current.end());
+	const wchar_t * wWordArr = wWord.c_str();
+	const wchar_t * wCurrentArr = wCurrent.c_str();
+	int size = wWord.size() -1; // get the keyword's size
+
+	for (int i = 0; i < size; i+=2) { // for each char until the last one compare keyword and user's input
+		
+		if (wWordArr[i] != wCurrentArr[i]) { // if they aren't the same return 0
 			return 0;
 		}
 	}
@@ -205,21 +253,20 @@ void play(manikin* player1, int& score1, int& counter) { // game function
 			score1 += player1->step(); // add a score point from one step
 			p = player1->getPhase(); // change the phase
 			counter++; // increment step counter
-		}
+        }
 		else { break; } // current phase is the last, break the game
 	}
 }
 
 string randomSelector(string fileName) { // function that return random keyword from dictionary file
-	//слова в словнику повинні бути записані через пробіл, після останнього слова теж пробіл
-	//можна доробити, щоб приймалося розділення слів будь-якими isspace символами
-
 	fstream file;
-	string dict, word;
+	string word;
 	srand(time(0)); // random seed by time
 	file.open(fileName); // open the file
 
-	getline(file, dict); // get file data and put into string variable dict
+    string dict((std::istreambuf_iterator<char>(file)),
+                (std::istreambuf_iterator<char>()));    // get file data and put into string variable dict
+
 	if (isspace(dict[0])) { // if first char is space symbol then there're no word in the dictionary
 		cout << "В словнику відсутні слова! Помилка!";
 		exit(1);
@@ -228,7 +275,7 @@ string randomSelector(string fileName) { // function that return random keyword 
 	// loop that count words in the dictionary
 	int wordsCount = 0;
 	for (char buf : dict) { // foreach
-		if (buf == ' ') { wordsCount++; }
+		if (buf == '\n') { wordsCount++; }
 	}
 
 	int randomNumber = rand() % wordsCount; // get random number which is max equals words count
@@ -236,10 +283,10 @@ string randomSelector(string fileName) { // function that return random keyword 
 	int spaces = 0;
 	for (char ch : dict) { // foreach
 		if (spaces == randomNumber) { // got word with random number index
-			if (ch == ' ') { break; } // if char is space then break
+			if (ch == '\n') { break; } // if char is space then break
 			word += ch; // otherwise add char to final word
 		}
-		if (ch == ' ') { spaces++; } // spaces counter
+		if (ch == '\n') { spaces++; } // spaces counter
 	}
 	file.close(); // close the file
 	return (word); // return keyword
