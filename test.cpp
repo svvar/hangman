@@ -7,11 +7,12 @@
 #include <cstdlib> // functions used : srand(), rand(), exit()
 #include <chrono>
 #define PHASES 9 // phases of hangman (first phase + 8 mistakes)
+#define ALPHASIZE 33
 using namespace std;
 
 class manikin; // the main class
 // functions :
-int charValidation(string chIn);
+string charValidation(string chIn, bool &ind);
 string randomSelector(string fileName); // function that return random keyword from dictionary file
 int strCompare(string word, string current);  // function that compare two strings
 void play(manikin* player1, int& score1, int& counter); // game function
@@ -39,15 +40,41 @@ public:
 			<< "\x1b[2K"; // Delete the entire line
 		for (int i = 0; i < (int)word.size()/2; i++)
 			currentAppearance += "ˍ";
-		currentAppearance += "\0";
+
+		for(int i = 0; i < (int)word.size(); i++){
+			if(word[i] == '-') {
+				currentAppearance += "ˍ";
+				word.replace(i, 1, "־");
+				currentAppearance.replace(i, 2, "־");
+			}
+			
+			else if(word[i] == '\''){
+				currentAppearance += "ˍ";
+				word.replace(i, 1, "ʼ");
+				currentAppearance.replace(i, 2, "ʼ");
+			}			
+		}
 	}
+
 	manikin(int mode) { // constructor : create game for 1 person
 		word = randomSelector("dict.txt");
 
 		for (int i = 0; i < (int)word.size()/2; i++)
 			currentAppearance += "ˍ";
-		currentAppearance += "\0";
+
+		for(int i = 0; i < (int)word.size(); i++){
+			if(word[i] == '-') {
+				word.replace(i, 1, "־");
+				currentAppearance.replace(i, 2, "־");
+			}
+			
+			else if(word[i] == '\''){
+				word.replace(i, 1, "ʼ");
+				currentAppearance.replace(i, 2, "ʼ");
+			}		
+		}
 	}
+
 	inline void print_phase(int i) { cout << man[i]; } // print curent phase of hangman
 	inline string getWord() { return word; }		   // (where used?)
 	inline int getPhase() { return phase; }			   // return curent phase
@@ -63,11 +90,11 @@ public:
 		if (end == false) { // if game continue
 			cout << "\n" << currentAppearance << endl; // print current input
 			cout << "\nВгадайте букву: ";
-            int ind;
+            bool ind;
 			do{
-				ind = 0;
+				ind = false;
                 cin >> ch; // get new letter
-                ind = charValidation(ch);
+                ch = charValidation(ch, ind);
             }while(!ind);       //check input (only letters && only 1 char)
 
             cout << "\033[2J\033[1;1H"; //special screen clean command
@@ -80,7 +107,9 @@ public:
 				cout << "Буква знайдена!!" << endl;
     			int nPos = word.find(ch, 0); // first occurrence
     			while(nPos != (int)string::npos){
-					currentAppearance.replace(nPos, 2, ch);					
+					if(currentAppearance.substr(nPos, 2) != "־" && currentAppearance.substr(nPos, 2) != "ʼ"){					
+						currentAppearance.replace(nPos, 2, ch);					
+					}
 					nPos = word.find(ch, nPos + 1);
 									
     			}
@@ -192,7 +221,7 @@ int main() {
 	} while (answer == "y" || answer == "Y" || answer == "т" || answer == "Т");
 }
 
-int charValidation(string chIn){
+string charValidation(string chIn, bool &ind){
 	for(int i = 0; i < (int)chIn.size(); i++){
 		if(isalnum(chIn[i])){
 			cout << "Помилка, введіть ще раз: ";
@@ -205,11 +234,16 @@ int charValidation(string chIn){
 		return 0;
 	}
 
-	string alphabet[] = {"А","Б","В","Г","Ґ","Д","Е","Є","З","Ж","И","І","Ї","Й","К","Л","М","Н","О","П","Р","С","Т","У","Ф","Х","Ц","Ч","Ш","Щ","Ь","Ю","Я",
-						"а","б","в","г","ґ","д","е","є","ж","з","и","і","ї","й","к","л","м","н","о","п","р","с","т","у","ф","х","ц","ч","ш","щ","ь","ю","я"};
-	for(int i = 0; i < 66; i++){
-		if(chIn == alphabet[i]){
-			return 1;
+	string lowAlphabet[] = {"а","б","в","г","ґ","д","е","є","ж","з","и","і","ї","й","к","л","м","н","о","п","р","с","т","у","ф","х","ц","ч","ш","щ","ь","ю","я"};
+	string upperAlphabet[] = {"А","Б","В","Г","Ґ","Д","Е","Є","З","Ж","И","І","Ї","Й","К","Л","М","Н","О","П","Р","С","Т","У","Ф","Х","Ц","Ч","Ш","Щ","Ь","Ю","Я"};	
+	for(int i = 0; i < ALPHASIZE; i++){
+		if(chIn == upperAlphabet[i]){
+			chIn = lowAlphabet[i];
+		}
+		
+		if(chIn == lowAlphabet[i]){
+			ind = true;
+			return chIn;
 		}
 
 	}
@@ -268,7 +302,7 @@ string randomSelector(string fileName) { // function that return random keyword 
 		if (buf == '\n') { wordsCount++; }
 	}
 
-	int randomNumber = rand() % wordsCount; // get random number which is max equals words count
+	int randomNumber = 11; //rand() % wordsCount; // get random number which is max equals words count
 
 	int spaces = 0;
 	for (char ch : dict) { // foreach
