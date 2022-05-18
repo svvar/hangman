@@ -165,10 +165,10 @@ int main() {
 				cout << "\nВитрачений час (в секундах): " << time1.count();
 				cout << "\nВаш рахунок: " << score[0] << endl
 					<< endl;
-				cout << "\nЩе одне слово? (y/т) - ";
+				cout << "\nЩе одне слово? (т) - ";
 				cin >> reply;
                 cout << "\033[2J\033[1;1H"; // команда очищення екрану
-			} while (reply == "y" || reply == "Y" || reply == "т" || reply == "Т");
+			} while (reply == "т" || reply == "Т");
 			score[0] = 0; // скидання лічильника рахунку
 		}
 		else { // режим 2 : 2 гравці-користувачі
@@ -203,23 +203,23 @@ int main() {
 					fseek(stdin, 0, SEEK_END); // очищення буфера
 				} while (score[0] != maxScore && score[1] != maxScore);
 
-				cout << "\nЩе одна гра? (y/т) - ";
+				cout << "\nЩе одна гра? (т) - ";
 				cin >> reply;
                 cout << "\033[2J\033[1;1H"; // команда для очищення екрану
 				fseek(stdin, 0, SEEK_END); // очищення буфера
 				// скидання лічильників рахунку
 				score[0] = 0;
 				score[1] = 0;
-			} while (reply == "y" || reply == "Y" || reply == "т" || reply == "Т");
+			} while (reply == "т" || reply == "Т");
 		}
 
-		cout << "\n\nЗіграти нову гру? (y/т) - ";
+		cout << "\n\nЗіграти нову гру? (т) - ";
 		fseek(stdin, 0, SEEK_END); // очищення буфера
 		cin >> answer;
         cout << "\033[2J\033[1;1H"; // команда для очищення екрану
 		fseek(stdin, 0, SEEK_END); // очищення буфера
 
-	} while (answer == "y" || answer == "Y" || answer == "т" || answer == "Т");
+	} while (answer == "т" || answer == "Т");
 }
 
 string charValidation(string chIn, bool &ind){ // функція перевірки вводу користувача
