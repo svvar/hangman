@@ -49,12 +49,7 @@ using namespace std;
 		currentAppearance += "\0";
 	}
 
-	inline void manikin::print_phase(int i) { cout << man[i]; } // надрукувати поточну фазу шибениці
-	inline string manikin::getWord() { return word; }		   // повертає ключове слово
-	inline int manikin::getPhase() { return phase; }			   // повертає поточну фазу
-	inline bool manikin::isend() { return end; }				   // повертає статус гри (кінець або ні)
-
-	int manikin::step() { // один крок гри, повертає рахунок
+		int manikin::step() { // один крок гри, повертає рахунок
 		if (phase == PHASES - 1) { // якщо гравець на 8-ій фазі,
 			phase++;			   // то перейти до останньої
 			end = true; 		   // та закінчити гру
