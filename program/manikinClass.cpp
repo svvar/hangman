@@ -49,7 +49,7 @@ using namespace std;
 		currentAppearance += "\0";
 	}
 
-		int manikin::step() { // один крок гри, повертає рахунок
+	int manikin::step() { // один крок гри, повертає рахунок
 		if (phase == PHASES - 1) { // якщо гравець на 8-ій фазі,
 			phase++;			   // то перейти до останньої
 			end = true; 		   // та закінчити гру
