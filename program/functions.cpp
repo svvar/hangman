@@ -33,36 +33,23 @@ string charValidation(string ch, string &ch2, string word, bool &ind){ // фун
 	ind = true;
 	for(int i = 0; i < ALPHASIZE; i++){
 		for(int j = 0; j < wordSize; j++){
-			if(ch == upperAlphabet[i]){			//коли користувач ввів велику букву
+			if(ch == upperAlphabet[i] || ch == lowAlphabet[i]){	//коли користувач ввів велику або малу букву
 				string cur = wordChars[j];
-				if(cur == upperAlphabet[i]){	//коли в слові ця буква є великою
-					ch2 = lowAlphabet[i];
-					return ch;
-				}
-				else if(cur == lowAlphabet[i]){		//коли в слові ця буква є маленькою
+				if((cur == upperAlphabet[i] && ch == upperAlphabet[i]) || (cur == lowAlphabet[i] && ch == lowAlphabet[i])){	//коли в слові ця буква того ж самого регістру
+                        ch2 = lowAlphabet[i];
+                        return ch;
+                    }
+				else if(cur == lowAlphabet[i]){ //коли в слові ця буква є маленькою, а у вводі - великою
 					ch2 = lowAlphabet[i];
 					ch = lowAlphabet[i];
 					return ch;
 				}
-				else{
-					ch = lowAlphabet[i];
-					ch2 = ch;
-					return ch;
-				}
-			}
-
-			if(ch == lowAlphabet[i]){		//коли користувач ввід маленьку букву
-				string cur = wordChars[j];
-				if(cur == lowAlphabet[i]){		//коли в слові ця буква є маленькою
-					ch2 = lowAlphabet[i];
-					return ch;
-				}
-				else if(cur == upperAlphabet[i]){	//коли в слові ця буква є великою
-					ch2 = ch;
+                else if(cur == upperAlphabet[i]){ //коли в слові ця буква є великою, а у вводі - маленькою
+                    ch2 = ch;
 					ch = upperAlphabet[i];
 					return ch;
-				}
-				else{
+                }
+				else{ //коли букви в слові немає
 					ch = lowAlphabet[i];
 					ch2 = ch;
 					return ch;
