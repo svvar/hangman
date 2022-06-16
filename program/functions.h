@@ -3,6 +3,8 @@
 
 #include "manikinClass.h"
 
+std::string wordCheck(std::string word);    //функція перевірки загаданого слова
+
 std::string charValidation(std::string ch, std::string &ch2, std::string word, bool &ind);  // функція перевірки вводу користувача	
 
 int strCompare(std::string word, std::string current); // функція, що порівнює ключове слово і поточне

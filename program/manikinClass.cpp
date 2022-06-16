@@ -7,24 +7,35 @@ using namespace std;
 
 	manikin::manikin() { // конструктор : створити гру для 2 гравців
 		cout << "Введіть слово: ";
-		cin >> word;
+		word = wordCheck(word);
+
 		cout << "\x1b[1A"  // перемістити курсор на одну позицію вверх
 			<< "\x1b[2K"; // очистити весь рядок
-		for (int i = 0; i < (int)word.size()/2; i++)
-			currentAppearance += "ˍ";
 		
-		for(int i = 0; i < (int)word.size(); i++){ // підтримка для дефізу та апострофа
+		int wordSize = word.size();
+
+		for (int i = 0; i < wordSize/2; i++){
+			currentAppearance += "ˍ";
+		}
+		
+		int punctCount = 0;
+		for(int i = 0; i < wordSize; i++){ // підтримка для дефісу та апострофа
 			if(word[i] == '-') {
 				currentAppearance += "ˍ";
 				word.replace(i, 1, "˗");
 				currentAppearance.replace(i, 2, "˗");
+				punctCount++;
 			}
 			
 			else if(word[i] == '\''){
 				currentAppearance += "ˍ";
 				word.replace(i, 1, "ʼ");
 				currentAppearance.replace(i, 2, "ʼ");
+				punctCount++;
 			}			
+		}
+		if(punctCount >= 2){
+			currentAppearance = currentAppearance.substr(0, currentAppearance.size()-2);
 		}
 		currentAppearance += "\0";
 	}
@@ -32,20 +43,33 @@ using namespace std;
 	manikin::manikin(int mode) { // конструктор : створити гру для 1 гравця
 		word = randomSelector("dict.txt");
 
-		for (int i = 0; i < (int)word.size()/2; i++)
-			currentAppearance += "ˍ";
+		int wordSize = word.size();
 
-		for(int i = 0; i < (int)word.size(); i++){
+		for (int i = 0; i < wordSize/2; i++){
+			currentAppearance += "ˍ";
+		}
+		
+		int punctCount = 0;
+		for(int i = 0; i < wordSize; i++){ // підтримка для дефісу та апострофа
 			if(word[i] == '-') {
+				currentAppearance += "ˍ";
 				word.replace(i, 1, "˗");
 				currentAppearance.replace(i, 2, "˗");
+				punctCount++;
 			}
 			
 			else if(word[i] == '\''){
+				currentAppearance += "ˍ";
 				word.replace(i, 1, "ʼ");
 				currentAppearance.replace(i, 2, "ʼ");
-			}		
+				punctCount++;
+			}			
 		}
+		if(punctCount >= 2){
+			currentAppearance = currentAppearance.substr(0, currentAppearance.size()-2);
+		}
+		currentAppearance += "\0";
+		
 		currentAppearance += "\0";
 	}
 
@@ -102,7 +126,7 @@ using namespace std;
 
 		if (strCompare(word, currentAppearance)) { // порівнюємо ввід і ключове слово, якщо true
 			end = true; // закінчуємо гру, гравець переміг
-			cout << "\x1b[32mСЛОВО ВІДГАДАНЕ! - " << currentAppearance << "\x1b[97m\n";
+			cout << "\x1b[32mСЛОВО ВІДГАДАНЕ! - " << word << "\x1b[97m\n";
 			return 1; // на рахунок повертається 1
 		}
 

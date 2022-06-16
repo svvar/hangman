@@ -9,6 +9,45 @@
 
 using namespace std;
 
+string wordCheck(string word){
+	bool flag;				//умова продовження циклу
+	do{
+		flag = false;			
+		cin >> word;		//зчитуємо слово
+		int wordsize = word.size();		//розмір слова в байтах
+
+		bool error = false;				//індикатор наявності помилок
+		for(int i = 0; i < wordsize; i++){
+			if(isalnum(word[i])){			//коли є англійська буква чи цифра
+				error = true;
+				flag = true;
+			}
+		}
+		
+		int punctcount = 0;					//кількість символів(апострофів та дефісів)
+		for(int i = 0; i < wordsize; i++){
+			if(ispunct(word[i])){			//коли даний символ є знаком пунктуації
+				if(word[i]== '\'' || word[i] == '-'){		//коли це дефіс або апостроф
+					punctcount++;							
+				}
+				else{										//інші символи не підходять
+					error = true;					
+					flag = true;
+				}
+			}
+		}
+		if(error){
+			cout << "\x1b[31mПомилка, знайдено недопустимі символи, введіть ще раз: \x1b[97m";
+		}
+		if(punctcount == wordsize){
+			cout << "\x1b[31mПомилка, немає букв, введіть ще раз: \x1b[97m";
+			flag = true;
+		}
+	}while(flag);
+
+	return word;
+}
+
 string charValidation(string ch, string &ch2, string word, bool &ind){ // функція перевірки вводу користувача
 	for(int i = 0; i < (int)ch.size(); i++){
 		if(isalnum(ch[i])){
