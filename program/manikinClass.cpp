@@ -16,8 +16,8 @@ using namespace std;
 		for(int i = 0; i < (int)word.size(); i++){ // підтримка для дефізу та апострофа
 			if(word[i] == '-') {
 				currentAppearance += "ˍ";
-				word.replace(i, 1, "־");
-				currentAppearance.replace(i, 2, "־");
+				word.replace(i, 1, "˗");
+				currentAppearance.replace(i, 2, "˗");
 			}
 			
 			else if(word[i] == '\''){
@@ -37,8 +37,8 @@ using namespace std;
 
 		for(int i = 0; i < (int)word.size(); i++){
 			if(word[i] == '-') {
-				word.replace(i, 1, "-");
-				currentAppearance.replace(i, 2, "-");
+				word.replace(i, 1, "˗");
+				currentAppearance.replace(i, 2, "˗");
 			}
 			
 			else if(word[i] == '\''){
@@ -53,6 +53,7 @@ using namespace std;
 		if (phase == PHASES - 1) { // якщо гравець на 8-ій фазі,
 			phase++;			   // то перейти до останньої
 			end = true; 		   // та закінчити гру
+			cout << "\n\nЗагадане слово було: " << word << endl;  //вивід загаданого слова при поразці
 			return 0;              // на рахунок повертається 0
 		}
         string ch, ch2;
@@ -76,7 +77,7 @@ using namespace std;
 				cout << "Буква знайдена!!" << endl;
     			int nPos = word.find(ch); // перша позиція
     			while(nPos != (int)string::npos){ // доки маємо збіги
-					if(currentAppearance.substr(nPos, 2) != "־" && currentAppearance.substr(nPos, 2) != "ʼ"){					
+					if(currentAppearance.substr(nPos, 2) != "˗" && currentAppearance.substr(nPos, 2) != "ʼ"){					
 						currentAppearance.replace(nPos, 2, ch); // змінюємо поточне слово за позицією
 					}
 					nPos = word.find(ch, nPos + 1); // перехід до наступної позиції								
@@ -85,7 +86,7 @@ using namespace std;
 				//коли в слові є і великка і маленька літери, перевіряємо ще раз!
 				nPos = word.find(ch2); // перша позиція
     			while(nPos != (int)string::npos){ // доки маємо збіги
-					if(currentAppearance.substr(nPos, 2) != "־" && currentAppearance.substr(nPos, 2) != "ʼ"){					
+					if(currentAppearance.substr(nPos, 2) != "˗" && currentAppearance.substr(nPos, 2) != "ʼ"){					
 						currentAppearance.replace(nPos, 2, ch2); // змінюємо поточне слово за позицією
 					}
 					nPos = word.find(ch2, nPos + 1); // перехід до наступної позиції								
