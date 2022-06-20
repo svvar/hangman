@@ -70,34 +70,28 @@ string charValidation(string ch, string &ch2, string word, bool &ind){ // фун
 	string upperAlphabet[] = {"А","Б","В","Г","Ґ","Д","Е","Є","З","Ж","И","І","Ї","Й","К","Л","М","Н","О","П","Р","С","Т","У","Ф","Х","Ц","Ч","Ш","Щ","Ь","Ю","Я"};	
 	
 	ind = true;
-	for(int i = 0; i < ALPHASIZE; i++){
-		for(int j = 0; j < wordSize; j++){
-			if(ch == upperAlphabet[i] || ch == lowAlphabet[i]){	//коли користувач ввів велику або малу букву
-				string cur = wordChars[j];
-				if((cur == upperAlphabet[i] && ch == upperAlphabet[i]) || (cur == lowAlphabet[i] && ch == lowAlphabet[i])){	//коли в слові ця буква того ж самого регістру
-                        ch2 = lowAlphabet[i];
-                        return ch;
-                    }
-				else if(cur == lowAlphabet[i]){ //коли в слові ця буква є маленькою, а у вводі - великою
-					ch2 = lowAlphabet[i];
-					ch = lowAlphabet[i];
-					return ch;
-				}
-                else if(cur == upperAlphabet[i]){ //коли в слові ця буква є великою, а у вводі - маленькою
-                    ch2 = ch;
-					ch = upperAlphabet[i];
-					return ch;
-                }
-				else{ //коли букви в слові немає
-					ch = lowAlphabet[i];
-					ch2 = ch;
-					return ch;
-				}
-			}
+	
+	bool success = false; //робоча змінна щоб не шукати зайвий раз
+	int position = -1; //позиція введеної букви в алфавіті
+	//визначаємо положення букви в алфавіті
+	for(string s : lowAlphabet){
+		position++;
+		if(ch == s){
+			success = true;
+			break;
+		}
+	}
+	if(!success){
+		position = -1;
+		for(string s : upperAlphabet){
+			position++;
+			if(ch == s)
+				break;
 		}
 	}
 
-	cout << "\x1b[31mПомилка, введіть ще раз: \x1b[97m";	
+	ch2 = lowAlphabet[position];
+	ch = upperAlphabet[position];	
 	return ch;
 }
 

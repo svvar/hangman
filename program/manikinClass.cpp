@@ -80,7 +80,7 @@ using namespace std;
 			cout << "\n\nЗагадане слово було: " << word << endl;  //вивід загаданого слова при поразці
 			return 0;              // на рахунок повертається 0
 		}
-        string ch, ch2;
+        string ch, ch2;	
 		if (end == false) { // якщо гра продовжується
 			cout << "\n" << currentAppearance << endl; // надрукувати поточний ввід користувача
 			cout << "\nВгадайте букву: ";
@@ -89,15 +89,16 @@ using namespace std;
 				ind = false;
                 cin >> ch; // користувач вводить нову літеру
                 ch = charValidation(ch, ch2, word, ind); // перевірка вводу (лише літери && лише 1 символ)
+													//перетворює ch ЗАВЖДИ у великий символ, а ch2 ЗАВЖДИ у маленький
             }while(ind == false);
 
             cout << "\033[2J\033[1;1H"; //команда для очищення екрану
 
-			// якщо літера не знаходиться у використаних та не у ключовому слові, тоді перейти до наступної фази
-			if (usedSymbols.find(ch2) == string::npos && word.find(ch) == string::npos) { phase++; }
+			// якщо літера не знаходиться у ключовому слові, тоді перейти до наступної фази
+			if (word.find(ch) == string::npos && word.find(ch2) == string::npos) { phase++; }
 
 			// якщо літера присутня у ключовому слові
-			if (word.find(ch) != string::npos) {
+			if (word.find(ch) != string::npos || word.find(ch2) != string::npos) {
 				cout << "Буква знайдена!!" << endl;
     			int nPos = word.find(ch); // перша позиція
     			while(nPos != (int)string::npos){ // доки маємо збіги
